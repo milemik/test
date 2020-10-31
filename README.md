@@ -6,6 +6,8 @@
 
 In order to run the app you need to have python 3.7+ on your machine, and pipenv.
 
+##### NOTE: Windows don't support cronjobs, so on windows machine it might not work as it should.
+
 
 ### SETUP ###
 
