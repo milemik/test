@@ -2,6 +2,10 @@ from django.db import models
 
 
 class Airport_place(models.Model):
+	"""
+	Airport place are city and states of airport, maybe we would like
+	more airports in the future
+	"""
     state = models.CharField(max_length=100, null=False, blank=False)
     town = models.CharField(max_length=100, null=False, blank=False)
     runway_num = models.PositiveIntegerField(null=False, blank=False)

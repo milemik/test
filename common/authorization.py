@@ -6,7 +6,8 @@ from rest_framework.permissions import BasePermission
 
 class AirplainAuthorization(BasePermission):
     """
-    Global permission check for blocked IPs.
+    Global permission check if airplain is sending
+    correct ssh_pub key
     """
 
     def has_permission(self, request, view):

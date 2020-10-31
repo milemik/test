@@ -28,6 +28,10 @@ class Airplains(models.Model):
 
 
 class Position(models.Model):
+    """
+    Position of a plane, we can have multiple positions at specific
+    time so we can track planes route
+    """
     plain = models.ForeignKey(Airplains, on_delete=models.CASCADE)
     latitude = models.DecimalField(decimal_places=14, max_digits=20)
     longitude = models.DecimalField(decimal_places=14, max_digits=20)
