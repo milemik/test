@@ -41,12 +41,6 @@ python manage.py createsuperuser
 ```
 
 
-Now your server is up and runing and you can access it in your browser
-by going to localhost:8000
-
-Admin panel: localhost:8000/admin/
-
-
 Activate cronjobs:
 
 ```
@@ -64,3 +58,9 @@ Remove cronjobs:
 ```
 python manage.py crontab remove
 ```
+
+
+Now your server is up and runing and you can access it in your browser
+by going to localhost:8000
+
+Admin panel: localhost:8000/admin/
