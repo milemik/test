@@ -13,4 +13,4 @@ class WeatherSerializer(serializers.ModelSerializer):
             'wind_speed',
             'wind_deg',
             'last_update'
-            ] 
+            ]
