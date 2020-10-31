@@ -3,6 +3,9 @@ from aiport_place.models import Airport_place
 
 
 class Weather(models.Model):
+	"""
+	Maybe we want to track time for each airport for some future analitycs
+	"""
     airport = models.ForeignKey(Airport_place, on_delete=models.CASCADE)
     description = models.CharField(max_length=255)
     temperature = models.IntegerField()
