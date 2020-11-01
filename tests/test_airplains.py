@@ -73,14 +73,10 @@ def test_position_view_api(airplain_data):
         "position_time": 2,
     }
 
-    url = f'http://localhost:8000/api/{plane.call_sign}/position/{plane.pk}'
-    url = 'http://localhost:8000/api/N243/position/1/?plain=N243&latitude=0&longitude=1.0&altitude=1.0&heading=1&position_time=1'
-    print(url)
+    url = f'http://localhost:8000/api/{plane.call_sign}/position/{plane.pk}/'
 
     response = client.get(url, headers={'Authentication': plane.ssh_pub}, data=data)
-    print(response)
     assert response.status_code == 405
 
     response = client.put(url, headers={'Authentication': plane.ssh_pub}, data=data)
-    print(response.text)
-    assert response.status_code == 200
+    assert response.status_code == 201

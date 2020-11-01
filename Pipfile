@@ -14,6 +14,7 @@ pytest-django = "*"
 requests = "*"
 factory-boy = "*"
 ipdb = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.8"

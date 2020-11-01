@@ -4,6 +4,7 @@ from common.authorization import AirplainAuthorization
 from .serializers import PositionSerializer, AirplainsSerializer
 from rest_framework import generics, mixins
 from rest_framework.response import Response
+from rest_framework import status
 
 
 class PositionView(generics.GenericAPIView, mixins.UpdateModelMixin):
@@ -15,9 +16,9 @@ class PositionView(generics.GenericAPIView, mixins.UpdateModelMixin):
 
     def put(self, request, call_sign, pk=None):
         if Airplains.objects.filter(call_sign=call_sign).exists():
-            return self.update(request)
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            return Response({"CIAO": 0})
+            return Response(status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class PlainChangeStatus(generics.GenericAPIView, mixins.UpdateModelMixin):
