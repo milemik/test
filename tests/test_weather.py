@@ -2,7 +2,7 @@ import pytest
 import requests
 from django.conf import settings
 
-from .models import Weather
+from weather.models import Weather
 from aiport_place.models import Airport_place
 
 

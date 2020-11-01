@@ -1,8 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
 import pytest
-from .models import Airplains, Position
-from rest_framework.test import RequestsClient
+from airplains.models import Airplains, Position
+from rest_framework.test import RequestsClient, APIClient
+
+from .factories import GroundCrewFactory, AirportPlaceFactory, PositionFactory
 
 
 @pytest.fixture
@@ -56,13 +58,30 @@ def test_create_plain_position(airplain_data):
 @pytest.mark.django_db()
 def test_position_view_api(airplain_data):
     plane = Airplains.objects.create(**airplain_data)
+    airport = AirportPlaceFactory()
+    gc = GroundCrewFactory(airport=airport)
+    PositionFactory(plain=plane)
+
     client = RequestsClient()
+    # client.credentials(HTTP_AUTHORIZATION=plane.ssh_pub)
 
-    url = 'http://localhost:8000/api/NC9574/intent/'
+    data = {
+        "plain": plane.pk,
+        "latitude": 2,
+        "longitude": 2.0,
+        "altitude": 2.0,
+        "heading": 2,
+        "position_time": 2,
+    }
 
-    response = client.get(url, headers={'Authentication': plane.ssh_pub})
+    url = f'http://localhost:8000/api/{plane.call_sign}/position/{plane.pk}'
+    url = 'http://localhost:8000/api/N243/position/1/?plain=N243&latitude=0&longitude=1.0&altitude=1.0&heading=1&position_time=1'
+    print(url)
+
+    response = client.get(url, headers={'Authentication': plane.ssh_pub}, data=data)
+    print(response)
     assert response.status_code == 405
 
-    response = client.put(url, headers={'Authentication': plane.ssh_pub})
+    response = client.put(url, headers={'Authentication': plane.ssh_pub}, data=data)
+    print(response.text)
     assert response.status_code == 200
-    

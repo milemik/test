@@ -13,7 +13,7 @@ class PositionView(generics.GenericAPIView, mixins.UpdateModelMixin):
     permission_classes = (AirplainAuthorization,)
     
 
-    def put(self, request, call_sign):
+    def put(self, request, call_sign, pk=None):
         if Airplains.objects.filter(call_sign=call_sign).exists():
             return self.update(request)
         else:

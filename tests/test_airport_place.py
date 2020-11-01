@@ -1,6 +1,6 @@
 from django.test import TestCase
 import pytest
-from .models import Airport_place
+from aiport_place.models import Airport_place
 
 
 @pytest.mark.django_db()

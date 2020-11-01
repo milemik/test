@@ -1,6 +1,6 @@
 import pytest
-from .models import Groundcrew
-from weather.tests import airport
+from ground_crowd.models import Groundcrew
+from .test_weather import airport
 
 @pytest.mark.django_db()
 def test_ground_crew_model():
@@ -18,4 +18,3 @@ def test_create_ground_crew(airport):
         )
 
     assert Groundcrew.objects.all().count() == 1
-    

@@ -9,6 +9,11 @@ verify_ssl = true
 django = "*"
 djangorestframework = "*"
 django-crontab = "*"
+pytest = "*"
+pytest-django = "*"
+requests = "*"
+factory-boy = "*"
+ipdb = "*"
 
 [requires]
 python_version = "3.8"
