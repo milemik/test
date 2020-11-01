@@ -2,6 +2,9 @@ from django.db import models
 
 
 class Airplains(models.Model):
+    """
+    Airplains
+    """
 
     STATES = (
         (0, "PARKED"),
