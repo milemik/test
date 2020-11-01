@@ -71,11 +71,10 @@ def test_position_view_api(airplain_data):
 
     data = {
         "plain": plane.pk,
-        "latitude": 2,
+        "latitude": 2.0,
         "longitude": 2.0,
-        "altitude": 2.0,
+        "altitude": 2,
         "heading": 2,
-        "position_time": 2,
     }
 
     url = f'http://localhost:8000/api/{plane.call_sign}/position/{position.pk}/'
@@ -85,6 +84,7 @@ def test_position_view_api(airplain_data):
 
     response = client.put(url, headers={'Authentication': plane.ssh_pub}, data=data)
     assert response.status_code == 201
+    assert Position.objects.get(pk=position.pk).latitude == 2
 
 
 @pytest.mark.django_db()
@@ -98,12 +98,15 @@ def test_intention_change_api():
 
     data = {"state": 3}
 
+    # when runway_clear status is False, airaplane can't change status
     response = client.put(url, headers={'Authentication': plane.ssh_pub}, data=data)
     assert response.status_code == 403
 
     gc.runway_clear = True
     gc.save()
 
-
+    # When runaway_clear is True, airaplane can change status
     response = client.put(url, headers={'Authentication': plane.ssh_pub}, data=data)
     assert response.status_code == 202
+
+    assert Airplains.objects.get(call_sign=plane.call_sign).state == 3

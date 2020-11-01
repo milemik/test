@@ -5,6 +5,7 @@ from .serializers import PositionSerializer, AirplainsSerializer
 from rest_framework import generics, mixins
 from rest_framework.response import Response
 from rest_framework import status
+from .utils import get_data
 
 
 class PositionView(generics.GenericAPIView, mixins.UpdateModelMixin):
@@ -16,7 +17,13 @@ class PositionView(generics.GenericAPIView, mixins.UpdateModelMixin):
 
     def put(self, request, call_sign, pk=None):
         if Airplains.objects.filter(call_sign=call_sign).exists():
-            return Response(status=status.HTTP_201_CREATED)
+            data = get_data(request, call_sign)
+            serialzer = PositionSerializer(data=data)
+            if serialzer.is_valid():
+                Position.objects.filter(pk=pk).update(**data)
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(status=status.HTTP_409_CONFLICT)
         else:
             return Response(status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -32,9 +39,12 @@ class PlainChangeStatus(generics.GenericAPIView, mixins.UpdateModelMixin):
         For simplicity check only for Belgrade airport status
         """
         if Airplains.objects.filter(call_sign=call_sign).exists() and Groundcrew.objects.filter(runway_clear=True):
-            plain = Airplains.objects.get(call_sign=call_sign)
-            plain.state=request.data['state']
-            plain.save()
-            return Response(status=status.HTTP_202_ACCEPTED)
+            data = {'state': request.data['state']}
+            serialzer = AirplainsSerializer(data=data)
+            if serialzer.is_valid():
+                airplain = Airplains.objects.filter(pk=pk).update(**data)
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_409_CONFLICT)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
