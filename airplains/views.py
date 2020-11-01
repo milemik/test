@@ -27,7 +27,7 @@ class PlainChangeStatus(generics.GenericAPIView, mixins.UpdateModelMixin):
     serializer_class = AirplainsSerializer
     permission_classes = (AirplainAuthorization,)
 
-    def put(self, request, call_sign):
+    def put(self, request, call_sign, pk=None):
         """
         For simplicity check only for Belgrade airport status
         """
@@ -35,6 +35,6 @@ class PlainChangeStatus(generics.GenericAPIView, mixins.UpdateModelMixin):
             plain = Airplains.objects.get(call_sign=call_sign)
             plain.state=request.data['state']
             plain.save()
-            return Response("OK")
+            return Response(status=status.HTTP_202_ACCEPTED)
         else:
-            return Response({"Not possible now": 0})
+            return Response(status=status.HTTP_403_FORBIDDEN)

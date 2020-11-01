@@ -4,7 +4,12 @@ import pytest
 from airplains.models import Airplains, Position
 from rest_framework.test import RequestsClient
 
-from .factories import GroundCrewFactory, AirportPlaceFactory, PositionFactory
+from .factories import (
+    GroundCrewFactory,
+    AirportPlaceFactory,
+    PositionFactory,
+    AirplainsFactory
+    )
 
 
 @pytest.fixture
@@ -60,7 +65,7 @@ def test_position_view_api(airplain_data):
     plane = Airplains.objects.create(**airplain_data)
     airport = AirportPlaceFactory()
     gc = GroundCrewFactory(airport=airport)
-    PositionFactory(plain=plane)
+    position = PositionFactory(plain=plane)
 
     client = RequestsClient()
 
@@ -73,10 +78,32 @@ def test_position_view_api(airplain_data):
         "position_time": 2,
     }
 
-    url = f'http://localhost:8000/api/{plane.call_sign}/position/{plane.pk}/'
+    url = f'http://localhost:8000/api/{plane.call_sign}/position/{position.pk}/'
 
     response = client.get(url, headers={'Authentication': plane.ssh_pub}, data=data)
     assert response.status_code == 405
 
     response = client.put(url, headers={'Authentication': plane.ssh_pub}, data=data)
     assert response.status_code == 201
+
+
+@pytest.mark.django_db()
+def test_intention_change_api():
+    plane = AirplainsFactory()
+    airport = AirportPlaceFactory()
+    gc = GroundCrewFactory(airport=airport, runway_clear=False)
+    client = RequestsClient()
+
+    url = f'http://localhost:8000/api/{plane.call_sign}/intent/{plane.pk}/'
+
+    data = {"state": 3}
+
+    response = client.put(url, headers={'Authentication': plane.ssh_pub}, data=data)
+    assert response.status_code == 403
+
+    gc.runway_clear = True
+    gc.save()
+
+
+    response = client.put(url, headers={'Authentication': plane.ssh_pub}, data=data)
+    assert response.status_code == 202
