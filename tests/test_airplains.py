@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 import pytest
 from airplains.models import Airplains, Position
-from rest_framework.test import RequestsClient, APIClient
+from rest_framework.test import RequestsClient
 
 from .factories import GroundCrewFactory, AirportPlaceFactory, PositionFactory
 
@@ -63,7 +63,6 @@ def test_position_view_api(airplain_data):
     PositionFactory(plain=plane)
 
     client = RequestsClient()
-    # client.credentials(HTTP_AUTHORIZATION=plane.ssh_pub)
 
     data = {
         "plain": plane.pk,
