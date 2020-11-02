@@ -15,21 +15,8 @@ class PositionSerializer(serializers.ModelSerializer):
             'heading',
             )
 
-    def update(self, instance, validated_data):
-        instance.plain = validated_data.get('plain')
-        instance.latitude = validated_data.get('latitude')
-        instance.longitude = validated_data.get('longitude')
-        instance.altitude = validated_data.get('altitude')
-        instance.heading = validated_data.get('heading')
-        return instance
-
-
 class AirplainsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Airplains
         fields = ('state',)
-
-    def update(self, instance, validated_data):
-        instance.state = validated_data.get('state')
-        return instance

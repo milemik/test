@@ -110,3 +110,25 @@ def test_intention_change_api():
     assert response.status_code == 202
 
     assert Airplains.objects.get(call_sign=plane.call_sign).state == 3
+
+
+@pytest.mark.django_db()
+def test_create_position_api():
+    plane = AirplainsFactory()
+    client = RequestsClient()
+
+    data = {
+        "plain": plane.pk,
+        "latitude": 2.0,
+        "longitude": 2.0,
+        "altitude": 2,
+        "heading": 2,
+    }
+
+    url = f'http://localhost:8000/api/{plane.call_sign}/create_position/'
+
+    assert Position.objects.all().count() == 0
+
+    response = client.post(url, headers={'Authentication': plane.ssh_pub}, data=data)
+    assert response.status_code == 201
+    assert Position.objects.all().count() == 1

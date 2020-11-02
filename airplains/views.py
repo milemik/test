@@ -5,7 +5,7 @@ from .serializers import PositionSerializer, AirplainsSerializer
 from rest_framework import generics, mixins
 from rest_framework.response import Response
 from rest_framework import status
-from .utils import get_data
+from .utils import get_position_data
 
 
 class PositionView(generics.GenericAPIView, mixins.UpdateModelMixin):
@@ -17,7 +17,7 @@ class PositionView(generics.GenericAPIView, mixins.UpdateModelMixin):
 
     def put(self, request, call_sign, pk=None):
         if Airplains.objects.filter(call_sign=call_sign).exists():
-            data = get_data(request, call_sign)
+            data = get_position_data(request, call_sign)
             serialzer = PositionSerializer(data=data)
             if serialzer.is_valid():
                 Position.objects.filter(pk=pk).update(**data)
@@ -26,6 +26,16 @@ class PositionView(generics.GenericAPIView, mixins.UpdateModelMixin):
                 return Response(status=status.HTTP_409_CONFLICT)
         else:
             return Response(status.HTTP_406_NOT_ACCEPTABLE)
+
+
+class CreatePosition(generics.GenericAPIView, mixins.CreateModelMixin):
+
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer
+    permission_classes = (AirplainAuthorization,)
+
+    def post(self, request, call_sign, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class PlainChangeStatus(generics.GenericAPIView, mixins.UpdateModelMixin):

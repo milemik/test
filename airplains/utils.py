@@ -1,7 +1,7 @@
 from .models import Airplains
 
 
-def get_data(request, call_sign):
+def get_position_data(request, call_sign):
 	data = dict()
 	data['plain'] = Airplains.objects.get(call_sign=call_sign).pk
 	data['latitude'] = request.data['latitude']
